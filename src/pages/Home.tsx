@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import { Container } from "../layout/Container"
-import { fluid } from "../theme/utils/fluid"
-import { ViewportInspector } from "../components/ViewportInspector"
+import { Link } from "react-router"
+// import { breakpoints } from "../theme/tokens/breakpoints"
+import { Grid } from "../layout/Grid"
 
-// ─── Componentes de layout da página ─────────────────────────────────────────
+// ─── Componentes base ─────────────────────────────────────────────────────────
 
 const Header = styled.header`
   border-bottom: 2px solid ${({ theme }) => theme.colors.gray.base};
@@ -48,6 +48,13 @@ const SectionTitle = styled.h2`
   padding-left: ${({ theme }) => theme.spacing.sm};
 `
 
+const SubTitle = styled.h3`
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.blue.base};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+`
+
 const Description = styled.p`
   font-size: ${({ theme }) => theme.typography.fontSizes.md};
   color: ${({ theme }) => theme.colors.gray.dark};
@@ -72,318 +79,333 @@ const TokenName = styled.code`
   color: ${({ theme }) => theme.colors.blue.base};
 `
 
-const Label = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.gray.dark};
-`
-
-const Grid = styled.div<{ $cols?: number }>`
-  display: grid;
-  grid-template-columns: repeat(${({ $cols }) => $cols ?? 2}, 1fr);
-  gap: ${({ theme }) => theme.spacing.md};
-`
-
-// ─── Componentes específicos desta página ────────────────────────────────────
-
-const FluidCard = styled.div`
-  background: ${({ theme }) => theme.colors.blue.base};
+const Callout = styled.div`
+  background: ${({ theme }) => theme.colors.yellowLight};
+  border-left: 4px solid ${({ theme }) => theme.colors.yellow.base};
   border-radius: ${({ theme }) => theme.radius.md};
   padding: ${({ theme }) => theme.spacing.md};
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.blue.base};
+  line-height: ${({ theme }) => theme.typography.lineHeights.relaxed};
 `
 
-const FluidToken = styled.span`
-  color: ${({ theme }) => theme.colors.yellow.base};
+// ─── Diagrama de layout ───────────────────────────────────────────────────────
+
+const LayoutDiagram = styled.div`
+  border: 2px dashed ${({ theme }) => theme.colors.blue.light};
+  border-radius: ${({ theme }) => theme.radius.md};
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: ${({ theme }) => theme.colors.gray.base};
+`
+
+const DiagramBlock = styled.div<{ $color: string }>`
+  background: ${({ $color }) => $color};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const DiagramLabel = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.white};
+`
+
+const DiagramFile = styled.code`
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: rgba(255,255,255,0.6);
 `
 
-const FluidValue = styled.span`
-  color: ${({ theme }) => theme.colors.gray.light};
-  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
-  font-family: monospace;
-  word-break: break-all;
-  opacity: 0.8;
-`
-
-const ContainerDemo = styled.div`
-  border: 2px dashed ${({ theme }) => theme.colors.yellow.base};
-  border-radius: ${({ theme }) => theme.radius.md};
-  padding: ${({ theme }) => theme.spacing.md};
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-`
-
-const ContainerDemoInner = styled.div`
+const DiagramContent = styled.div`
   background: ${({ theme }) => theme.colors.blueLight};
-  border-radius: ${({ theme }) => theme.radius.sm};
-  padding: ${({ theme }) => theme.spacing.md};
-  text-align: center;
+  padding: ${({ theme }) => theme.spacing.lg};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
   color: ${({ theme }) => theme.colors.blue.base};
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `
 
-const ContainerMeta = styled.div`
+// ─── Cards de rota ────────────────────────────────────────────────────────────
+
+const RouteCard = styled(Link)`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
+  background: ${({ theme }) => theme.colors.gray.light};
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  border-left: 4px solid ${({ theme }) => theme.colors.blue.light};
+  transition: box-shadow 0.2s, border-color 0.2s;
 
-const CompareRow = styled.div`
-  display: grid;
-  grid-template-columns: 130px 1fr 1fr;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.sm} 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray.base};
-
-  &:last-child {
-    border-bottom: none;
+  &:hover {
+    box-shadow: ${({ theme }) => theme.shadows.md};
+    border-color: ${({ theme }) => theme.colors.yellow.base};
   }
 `
 
-const Before = styled.span`
+const RoutePath = styled.code`
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.gray.dark};
-  font-family: monospace;
-  text-decoration: line-through;
-  opacity: 0.6;
+  color: ${({ theme }) => theme.colors.yellow.dark};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `
 
-const After = styled.span`
+const RouteLabel = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.blue.base};
+`
+
+const RouteDesc = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.green.base};
-  font-family: monospace;
-  word-break: break-all;
+  color: ${({ theme }) => theme.colors.gray.dark};
+`
+
+// ─── Demo do Grid ─────────────────────────────────────────────────────────────
+
+const DemoBox = styled.div`
+  background: ${({ theme }) => theme.colors.blue.base};
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  min-height: 60px;
 `
 
 // ─── Página ──────────────────────────────────────────────────────────────────
 
 export default function Home() {
-
   return (
-    <Container>
-
+    <>
       {/* Cabeçalho */}
       <Header>
-        <Badge>Módulo 03</Badge>
-        <Title>Responsive Layout</Title>
+        <Badge>Módulo 04</Badge>
+        <Title>Layout Components</Title>
         <Subtitle>
-          Este módulo transforma os tokens estáticos do módulo 02 em valores fluidos usando{" "}
-          <TokenName>clamp()</TokenName> — sem media queries por propriedade. Também adiciona
-          o componente <TokenName>Container</TokenName> que centraliza e delimita o conteúdo
-          em qualquer tamanho de tela.
+          Este módulo adiciona roteamento com <strong>react-router-dom</strong>, os
+          componentes globais de layout — <strong>Navbar</strong> e <strong>Footer</strong> —
+          e o componente <strong>Grid</strong> responsivo automático. As rotas são
+          configuradas em um único arquivo, e a Navbar as lê automaticamente.
         </Subtitle>
       </Header>
 
-      {/* Inspetor ao vivo — primeiro bloco para impacto imediato */}
+      {/* O que foi configurado */}
       <Section>
-        <SectionTitle>Veja acontecendo ao vivo</SectionTitle>
+        <SectionTitle>O que foi configurado</SectionTitle>
+
+        <SubTitle>Roteamento — <TokenName>react-router-dom</TokenName></SubTitle>
         <Description>
-          Redimensione a janela do browser e observe os valores dos tokens sendo
-          recalculados em tempo real pelo browser — sem nenhum JavaScript no cliente.
+          Permite navegar entre páginas sem recarregar o browser. O{" "}
+          <TokenName>BrowserRouter</TokenName> foi adicionado no <TokenName>main.tsx</TokenName>{" "}
+          envolvendo toda a aplicação.
         </Description>
-        <ViewportInspector />
+
+        <SubTitle>Arquivo de rotas — <TokenName>router/router.data.tsx</TokenName></SubTitle>
+        <Description>
+          Todas as rotas ficam centralizadas aqui. Cada rota tem <TokenName>path</TokenName>,{" "}
+          <TokenName>element</TokenName>, <TokenName>label</TokenName> e a flag{" "}
+          <TokenName>nav</TokenName> que controla se aparece na Navbar. A Navbar e o{" "}
+          <TokenName>App.tsx</TokenName> leem esse array automaticamente.
+        </Description>
+
+        <SubTitle>Layout global — <TokenName>Layout.tsx</TokenName></SubTitle>
+        <Description>
+          Envolve todas as rotas. Renderiza a Navbar, o conteúdo da página atual via{" "}
+          <TokenName>{"<Outlet />"}</TokenName> e o Footer. Qualquer nova página já herda
+          o layout completo sem precisar importar nada.
+        </Description>
+
+        <SubTitle>Grid responsivo — <TokenName>layout/Grid.tsx</TokenName></SubTitle>
+        <Description>
+          Componente de layout que organiza filhos em colunas automaticamente usando{" "}
+          <TokenName>auto-fit</TokenName> e <TokenName>minmax()</TokenName> — sem media
+          queries, sem número fixo de colunas.
+        </Description>
       </Section>
 
-      {/* O que mudou */}
+      {/* Como o layout funciona */}
       <Section>
-        <SectionTitle>O que mudou neste módulo</SectionTitle>
+        <SectionTitle>Como o layout funciona</SectionTitle>
         <Description>
-          Os tokens de <TokenName>spacing</TokenName> e <TokenName>typography.fontSizes</TokenName>{" "}
-          antes retornavam valores fixos em <TokenName>px</TokenName> ou <TokenName>rem</TokenName>.
-          Agora retornam uma string <TokenName>clamp()</TokenName> que o browser interpreta
-          e recalcula automaticamente conforme a largura da tela muda.
+          O <TokenName>{"<Outlet />"}</TokenName> é um placeholder do react-router — ele
+          renderiza a página da rota atual dentro do layout, sem precisar repetir
+          Navbar e Footer em cada página.
         </Description>
 
-        <Label>Comparação — antes e depois</Label>
-        <div>
-          {([
-            ["spacing.xs",   "4px",      fluid(2,  4)],
-            ["spacing.sm",   "8px",      fluid(4,  8)],
-            ["spacing.md",   "16px",     fluid(8,  16)],
-            ["spacing.lg",   "24px",     fluid(16, 24)],
-            ["spacing.xl",   "32px",     fluid(20, 32)],
-            ["fontSizes.sm", "0.875rem", fluid(14, 16)],
-            ["fontSizes.md", "1rem",     fluid(16, 18)],
-            ["fontSizes.lg", "1.25rem",  fluid(20, 24)],
-            ["fontSizes.xl", "1.5rem",   fluid(24, 32)],
-          ] as const).map(([token, before, after]) => (
-            <CompareRow key={token}>
-              <TokenName>{token}</TokenName>
-              <Before>{before}</Before>
-              <After>{after}</After>
-            </CompareRow>
-          ))}
-        </div>
-      </Section>
+        <LayoutDiagram>
+          <DiagramBlock $color="#14213D">
+            <DiagramLabel>← Navbar</DiagramLabel>
+            <DiagramFile>layout/Nav.tsx</DiagramFile>
+          </DiagramBlock>
+          <DiagramContent>
+            &lt;Outlet /&gt; — a página atual entra aqui (Home, Sobre, etc.)
+          </DiagramContent>
+          <DiagramBlock $color="#2B3A5A">
+            <DiagramLabel>← Footer</DiagramLabel>
+            <DiagramFile>layout/Footer.tsx</DiagramFile>
+          </DiagramBlock>
+        </LayoutDiagram>
 
-      {/* Como funciona o fluid() */}
-      <Section>
-        <SectionTitle>
-          A função <TokenName>fluid()</TokenName>
-        </SectionTitle>
-        <Description>
-          Recebe o valor mínimo e máximo em <TokenName>px</TokenName> e retorna uma string{" "}
-          <TokenName>clamp()</TokenName> calculada com base nos breakpoints{" "}
-          <TokenName>mobile (320px)</TokenName> e <TokenName>desktop (1440px)</TokenName>.
-          O browser interpreta essa string nativamente — sem JavaScript rodando no cliente.
-        </Description>
-
-        <CodeBlock>{`// src/theme/utils/fluid.ts
-import { breakpoints } from '../tokens/breakpoints'
-
-export function fluid(minPx: number, maxPx: number): string {
-  const minBp = breakpoints.mobile   // 320
-  const maxBp = breakpoints.desktop  // 1440
-
-  const slope        = (maxPx - minPx) / (maxBp - minBp)
-  const intercept    = minPx - slope * minBp
-
-  const minRem       = (minPx / 16).toFixed(4)
-  const maxRem       = (maxPx / 16).toFixed(4)
-  const interceptRem = (intercept / 16).toFixed(4)
-  const slopeVw      = (slope * 100).toFixed(4)
-
-  return \`clamp(\${minRem}rem, \${interceptRem}rem + \${slopeVw}vw, \${maxRem}rem)\`
-}`}</CodeBlock>
-
-        <Label>Valores gerados por token</Label>
-        <Grid $cols={2}>
-          {([
-            ["fluid(14, 16)",  fluid(14, 16)],
-            ["fluid(16, 18)",  fluid(16, 18)],
-            ["fluid(20, 24)",  fluid(20, 24)],
-            ["fluid(24, 32)",  fluid(24, 32)],
-            ["fluid(2, 4)",    fluid(2,  4)],
-            ["fluid(4, 8)",    fluid(4,  8)],
-            ["fluid(8, 16)",   fluid(8,  16)],
-            ["fluid(16, 24)",  fluid(16, 24)],
-          ] as const).map(([call, result]) => (
-            <FluidCard key={call}>
-              <FluidToken>{call}</FluidToken>
-              <FluidValue>{result}</FluidValue>
-            </FluidCard>
-          ))}
-        </Grid>
-
-        <CodeBlock>{`// Como usar nos tokens
-import { fluid } from "../utils/fluid"
-
-// typography.ts
-fontSizes: {
-  sm: fluid(14, 16),
-  md: fluid(16, 18),
-  lg: fluid(20, 24),
-  xl: fluid(24, 32),
-}
-
-// spacing.ts
-export const spacing = {
-  xs: fluid(2,  4),
-  sm: fluid(4,  8),
-  md: fluid(8,  16),
-  lg: fluid(16, 24),
-  xl: fluid(20, 32),
-}`}</CodeBlock>
-      </Section>
-
-      {/* Container */}
-      <Section>
-        <SectionTitle>
-          O componente <TokenName>Container</TokenName>
-        </SectionTitle>
-        <Description>
-          Centraliza o conteúdo horizontalmente, limita a largura máxima ao breakpoint{" "}
-          <TokenName>desktop (1440px)</TokenName> e garante padding lateral em telas menores
-          para que o conteúdo nunca encoste nas bordas.
-        </Description>
-
-        <ContainerDemo>
-          <ContainerMeta>
-            <Label>← padding</Label>
-            <TokenName>max-width: 1440px · margin: 0 auto</TokenName>
-            <Label>padding →</Label>
-          </ContainerMeta>
-          <ContainerDemoInner>
-            Todo o conteúdo do site vive aqui dentro
-          </ContainerDemoInner>
-        </ContainerDemo>
-
-        <CodeBlock>{`// src/layout/Container.ts
-import styled from "styled-components"
-
-export const Container = styled.div\`
-  width: 100%;
-  max-width: \${({ theme }) => theme.breakpoints.desktop}px;
-  margin: 0 auto;
-  padding: 0 \${({ theme }) => theme.spacing.xl};
-  display: flex;
-  flex-direction: column;
-  gap: \${({ theme }) => theme.spacing.xl};
-\``}</CodeBlock>
-
-        <CodeBlock>{`// Uso em qualquer página
-import { Container } from "../layout/Container"
-
-export default function Home() {
+        <CodeBlock>{`// src/layout/Layout.tsx
+export function Layout() {
   return (
-    <Container>
-      <Header>...</Header>
-      <Section>...</Section>
-    </Container>
+    <>
+      <Nav />
+      <Container>
+        <Outlet />   {/* ← a página atual é injetada aqui */}
+      </Container>
+      <Footer />
+    </>
   )
 }`}</CodeBlock>
       </Section>
 
-      {/* Por que não media queries para cada propriedade */}
+      {/* Sistema de rotas automático */}
       <Section>
-        <SectionTitle>Por que não usar media queries para cada propriedade?</SectionTitle>
+        <SectionTitle>Sistema de rotas automático</SectionTitle>
         <Description>
-          A abordagem tradicional exigiria uma media query por token em cada breakpoint.
-          Com <TokenName>fluid()</TokenName> isso se resolve em uma linha — e a transição
-          é <strong>contínua</strong>, não um salto abrupto entre breakpoints.
+          Em vez de declarar cada rota manualmente no <TokenName>App.tsx</TokenName> e
+          repetir os links na Navbar, tudo fica em um único lugar.
         </Description>
 
-        <CodeBlock>{`// ❌ Abordagem tradicional — verboso e com saltos abruptos
-const Title = styled.h1\`
-  font-size: 1.5rem;
+        <CodeBlock>{`// src/router/router.data.tsx
+export const routes = [
+  { path: "/",      element: <Home />,  label: "Home",  nav: true  },
+  { path: "/sobre", element: <Sobre />, label: "Sobre", nav: true  },
+  { path: "/admin", element: <Admin />, label: "Admin", nav: false }, // não aparece na Navbar
+]
 
-  @media (min-width: 768px) {
-    font-size: 1.75rem;
-  }
-  @media (min-width: 1440px) {
-    font-size: 2rem;
+// App.tsx — rotas geradas automaticamente
+routes.map((route) => (
+  <Route
+    key={route.path}
+    path={route.path === "/" ? undefined : route.path.replace("/", "")}
+    index={route.path === "/"}
+    element={route.element}
+  />
+))
+
+// Nav.tsx — links gerados automaticamente
+routes
+  .filter(route => route.nav)
+  .map(route => <NavLink to={route.path}>{route.label}</NavLink>)`}</CodeBlock>
+
+        <Callout>
+          Para adicionar uma nova página: crie o arquivo em <TokenName>pages/</TokenName>,
+          importe no <TokenName>router.data.tsx</TokenName> e adicione um objeto ao array.
+          A rota e o link da Navbar aparecem automaticamente — sem editar mais nenhum arquivo.
+        </Callout>
+      </Section>
+
+      {/* NavLink vs Link */}
+      <Section>
+        <SectionTitle><TokenName>NavLink</TokenName> vs <TokenName>Link</TokenName></SectionTitle>
+        <Description>
+          A Navbar usa <TokenName>NavLink</TokenName> que adiciona automaticamente a
+          classe <TokenName>active</TokenName> no link da rota atual — permitindo estilizar
+          o link ativo direto no CSS sem JavaScript extra. O prop <TokenName>end</TokenName>{" "}
+          na rota <TokenName>/</TokenName> evita que ela fique ativa em todas as páginas.
+        </Description>
+
+        <CodeBlock>{`const StyledNavLink = styled(NavLink)\`
+  color: \${({ theme }) => theme.colors.gray.light};
+
+  &.active {
+    background: \${({ theme }) => theme.colors.yellow.base};
+    color: \${({ theme }) => theme.colors.blue.dark};
   }
 \`
 
-// ✅ Com fluid() — uma linha, transição suave e contínua
-const Title = styled.h1\`
-  font-size: \${({ theme }) => theme.typography.fontSizes.xl};
-\``}</CodeBlock>
+// "end" é necessário na rota "/" para não marcar como ativa em todas as páginas
+<StyledNavLink to="/" end>Home</StyledNavLink>
+
+// Use <Link> para links internos sem necessidade de estado ativo
+// Use <a> apenas para links externos
+<a href="https://reactrouter.com" target="_blank">Docs</a>`}</CodeBlock>
+      </Section>
+
+      {/* Grid */}
+      <Section>
+        <SectionTitle>O componente <TokenName>Grid</TokenName></SectionTitle>
+        <Description>
+          Em vez de um sistema de 12 colunas fixas como o Bootstrap, o{" "}
+          <TokenName>Grid</TokenName> usa <TokenName>auto-fit</TokenName> com{" "}
+          <TokenName>minmax()</TokenName> — você define o tamanho mínimo de cada coluna
+          e o browser decide quantas cabem. Sem media queries, sem número fixo de colunas.
+        </Description>
+
+        <CodeBlock>{`// src/layout/Grid.tsx
+export const Grid = styled.div<{ $minWidth?: number }>\`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(\${({ $minWidth }) => $minWidth ?? 280}px, 1fr));
+  gap: \${({ theme }) => theme.spacing.md};
+\`
+
+// Uso — colunas de no mínimo 280px (padrão)
+<Grid>
+  <Card /> <Card /> <Card />
+</Grid>
+
+// Colunas menores — útil para badges, tags, itens compactos
+<Grid $minWidth={160}>
+  <Item /> <Item /> <Item /> <Item />
+</Grid>`}</CodeBlock>
 
         <Description>
-          Media queries ainda serão usadas no próximo módulo — mas apenas para mudanças
-          estruturais de layout, como número de colunas ou visibilidade do menu mobile.
-          Nunca mais para escalar fontes ou espaçamentos.
+          Redimensione a janela para ver o grid abaixo se ajustar automaticamente:
         </Description>
+
+        <Grid>
+          {["1", "2", "3", "4", "5", "6"].map((n) => (
+            <DemoBox key={n}>coluna {n}</DemoBox>
+          ))}
+        </Grid>
+
+        <Grid $minWidth={160}>
+          {["A", "B", "C", "D", "E", "F", "G", "H"].map((n) => (
+            <DemoBox key={n} style={{ minHeight: 40 }}>{n}</DemoBox>
+          ))}
+        </Grid>
+      </Section>
+
+      {/* Páginas disponíveis */}
+      <Section>
+        <SectionTitle>Páginas disponíveis</SectionTitle>
+        <Description>Clique para navegar — o browser não recarrega a página.</Description>
+        <Grid $minWidth={240}>
+          <RouteCard to="/">
+            <RoutePath>/</RoutePath>
+            <RouteLabel>Home</RouteLabel>
+            <RouteDesc>Esta página — documentação do módulo 04</RouteDesc>
+          </RouteCard>
+          <RouteCard to="/sobre">
+            <RoutePath>/sobre</RoutePath>
+            <RouteLabel>Sobre</RouteLabel>
+            <RouteDesc>Demonstração de responsividade e tokens ao vivo</RouteDesc>
+          </RouteCard>
+        </Grid>
       </Section>
 
       {/* Próximo módulo */}
       <Section>
         <SectionTitle>Próximo módulo</SectionTitle>
         <Description>
-          No módulo <strong>04-layout-components</strong> será criado o sistema de
-          roteamento com <TokenName>react-router-dom</TokenName> e os componentes de
-          layout globais — <TokenName>Navbar</TokenName> e <TokenName>Footer</TokenName> —
-          que se aplicam automaticamente a todas as páginas.
+          No módulo <strong>05-basic-ui-components</strong> serão criados os primeiros
+          componentes de interface reutilizáveis — botões, cards e badges — todos
+          integrados ao sistema de tokens do tema.
         </Description>
       </Section>
-
-    </Container>
+    </>
   )
 }
