@@ -89,6 +89,7 @@ declare module "styled-components" {
     };
 
     breakpoints: {
+      mobile: number;
       tablet: number;
       desktop: number;
     };

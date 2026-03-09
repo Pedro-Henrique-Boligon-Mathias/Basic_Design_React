@@ -1,15 +1,9 @@
 import styled from "styled-components"
+import { Container } from "../layout/Container"
+import { fluid } from "../theme/utils/fluid"
+import { ViewportInspector } from "../components/ViewportInspector"
 
-// ─── Estrutura da página ──────────────────────────────────────────────────────
-
-const Page = styled.main`
-  max-width: 860px;
-  margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing.xl};
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xl};
-`
+// ─── Componentes de layout da página ─────────────────────────────────────────
 
 const Header = styled.header`
   border-bottom: 2px solid ${({ theme }) => theme.colors.gray.base};
@@ -39,8 +33,6 @@ const Subtitle = styled.p`
   color: ${({ theme }) => theme.colors.gray.dark};
   line-height: ${({ theme }) => theme.typography.lineHeights.relaxed};
 `
-
-// ─── Seção genérica ───────────────────────────────────────────────────────────
 
 const Section = styled.section`
   display: flex;
@@ -72,17 +64,6 @@ const CodeBlock = styled.pre`
   line-height: ${({ theme }) => theme.typography.lineHeights.relaxed};
 `
 
-const Grid = styled.div<{ $cols?: number }>`
-  display: grid;
-  grid-template-columns: repeat(${({ $cols }) => $cols ?? 3}, 1fr);
-  gap: ${({ theme }) => theme.spacing.md};
-`
-
-const Label = styled.span`
-  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.gray.dark};
-`
-
 const TokenName = styled.code`
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   background: ${({ theme }) => theme.colors.gray.light};
@@ -91,29 +72,71 @@ const TokenName = styled.code`
   color: ${({ theme }) => theme.colors.blue.base};
 `
 
-// ─── Cores ────────────────────────────────────────────────────────────────────
+const Label = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.gray.dark};
+`
 
-const ColorCard = styled.div<{ $bg: string; $dark?: boolean }>`
-  background: ${({ $bg }) => $bg};
+const Grid = styled.div<{ $cols?: number }>`
+  display: grid;
+  grid-template-columns: repeat(${({ $cols }) => $cols ?? 2}, 1fr);
+  gap: ${({ theme }) => theme.spacing.md};
+`
+
+// ─── Componentes específicos desta página ────────────────────────────────────
+
+const FluidCard = styled.div`
+  background: ${({ theme }) => theme.colors.blue.base};
   border-radius: ${({ theme }) => theme.radius.md};
   padding: ${({ theme }) => theme.spacing.md};
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};
-  box-shadow: ${({ theme }) => theme.shadows.sm};
-  color: ${({ $dark }) => ($dark ? "#fff" : "#14213D")};
 `
 
-const ColorValue = styled.span`
+const FluidToken = styled.span`
+  color: ${({ theme }) => theme.colors.yellow.base};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
-  opacity: 0.7;
 `
 
-// ─── Tipografia ───────────────────────────────────────────────────────────────
+const FluidValue = styled.span`
+  color: ${({ theme }) => theme.colors.gray.light};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-family: monospace;
+  word-break: break-all;
+  opacity: 0.8;
+`
 
-const TypographyRow = styled.div`
+const ContainerDemo = styled.div`
+  border: 2px dashed ${({ theme }) => theme.colors.yellow.base};
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: ${({ theme }) => theme.spacing.md};
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
+`
+
+const ContainerDemoInner = styled.div`
+  background: ${({ theme }) => theme.colors.blueLight};
+  border-radius: ${({ theme }) => theme.radius.sm};
+  padding: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+  color: ${({ theme }) => theme.colors.blue.base};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+`
+
+const ContainerMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const CompareRow = styled.div`
+  display: grid;
+  grid-template-columns: 130px 1fr 1fr;
+  align-items: center;
   gap: ${({ theme }) => theme.spacing.md};
   padding: ${({ theme }) => theme.spacing.sm} 0;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray.base};
@@ -123,298 +146,244 @@ const TypographyRow = styled.div`
   }
 `
 
-const TypographySample = styled.span<{ $size: string; $weight?: number }>`
-  font-size: ${({ $size }) => $size};
-  font-weight: ${({ $weight }) => $weight ?? 400};
-  color: ${({ theme }) => theme.colors.blue.base};
-  flex: 1;
+const Before = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.gray.dark};
+  font-family: monospace;
+  text-decoration: line-through;
+  opacity: 0.6;
 `
 
-// ─── Espaçamentos ─────────────────────────────────────────────────────────────
-
-const SpacingRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
+const After = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.green.base};
+  font-family: monospace;
+  word-break: break-all;
 `
 
-const SpacingBar = styled.div<{ $size: string }>`
-  height: 24px;
-  width: ${({ $size }) => $size};
-  background: ${({ theme }) => theme.colors.yellow.base};
-  border-radius: ${({ theme }) => theme.radius.sm};
-  flex-shrink: 0;
-`
-
-// ─── Radius ───────────────────────────────────────────────────────────────────
-
-const RadiusBox = styled.div<{ $radius: string }>`
-  width: 100%;
-  aspect-ratio: 1;
-  background: ${({ theme }) => theme.colors.blue.light};
-  border-radius: ${({ $radius }) => $radius};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  color: ${({ theme }) => theme.colors.white};
-`
-
-// ─── Sombras ─────────────────────────────────────────────────────────────────
-
-const ShadowBox = styled.div<{ $shadow: string }>`
-  background: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: ${({ $shadow }) => $shadow};
-  padding: ${({ theme }) => theme.spacing.lg};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-`
-
-// ─── Componente ──────────────────────────────────────────────────────────────
+// ─── Página ──────────────────────────────────────────────────────────────────
 
 export default function Home() {
+
   return (
-    <Page>
+    <Container>
 
       {/* Cabeçalho */}
       <Header>
-        <Badge>Módulo 02</Badge>
-        <Title>Design Tokens &amp; Theme</Title>
+        <Badge>Módulo 03</Badge>
+        <Title>Responsive Layout</Title>
         <Subtitle>
-          Este módulo configura o sistema de design tokens — cores, tipografia, espaçamentos,
-          bordas e sombras — integrados ao <strong>styled-components</strong> via ThemeProvider.
-          Todos os valores abaixo vêm diretamente do tema, sem nenhum valor hardcoded.
+          Este módulo transforma os tokens estáticos do módulo 02 em valores fluidos usando{" "}
+          <TokenName>clamp()</TokenName> — sem media queries por propriedade. Também adiciona
+          o componente <TokenName>Container</TokenName> que centraliza e delimita o conteúdo
+          em qualquer tamanho de tela.
         </Subtitle>
       </Header>
 
-      {/* Como usar o tema */}
+      {/* Inspetor ao vivo — primeiro bloco para impacto imediato */}
       <Section>
-        <SectionTitle>Como usar o tema</SectionTitle>
+        <SectionTitle>Veja acontecendo ao vivo</SectionTitle>
         <Description>
-          Qualquer componente criado com <TokenName>styled-components</TokenName> tem acesso
-          ao tema via prop <TokenName>theme</TokenName>:
+          Redimensione a janela do browser e observe os valores dos tokens sendo
+          recalculados em tempo real pelo browser — sem nenhum JavaScript no cliente.
         </Description>
-        <CodeBlock>{`import styled from "styled-components"
-
-const MeuComponente = styled.div\`
-  background: \${({ theme }) => theme.colors.blue.base};
-  padding:    \${({ theme }) => theme.spacing.md};
-  font-size:  \${({ theme }) => theme.typography.fontSizes.lg};
-  border-radius: \${({ theme }) => theme.radius.md};
-  box-shadow: \${({ theme }) => theme.shadows.sm};
-\``}</CodeBlock>
+        <ViewportInspector />
       </Section>
 
-      {/* Cores */}
+      {/* O que mudou */}
       <Section>
-        <SectionTitle>Cores — <TokenName>theme.colors</TokenName></SectionTitle>
-        <Description>Paleta completa do projeto, organizada por grupo semântico.</Description>
+        <SectionTitle>O que mudou neste módulo</SectionTitle>
+        <Description>
+          Os tokens de <TokenName>spacing</TokenName> e <TokenName>typography.fontSizes</TokenName>{" "}
+          antes retornavam valores fixos em <TokenName>px</TokenName> ou <TokenName>rem</TokenName>.
+          Agora retornam uma string <TokenName>clamp()</TokenName> que o browser interpreta
+          e recalcula automaticamente conforme a largura da tela muda.
+        </Description>
 
-        <Label>Escala de cinza</Label>
-        <Grid $cols={3}>
-          <ColorCard $bg="#000000" $dark><Label style={{ color: "#fff" }}>black</Label><ColorValue>#000000</ColorValue></ColorCard>
-          <ColorCard $bg="#A3A3A3"><Label>gray.dark</Label><ColorValue>#A3A3A3</ColorValue></ColorCard>
-          <ColorCard $bg="#E5E5E5"><Label>gray.base</Label><ColorValue>#E5E5E5</ColorValue></ColorCard>
-          <ColorCard $bg="#F5F5F5"><Label>gray.light</Label><ColorValue>#F5F5F5</ColorValue></ColorCard>
-          <ColorCard $bg="#FFFFFF" style={{ border: "1px solid #E5E5E5" }}><Label>white</Label><ColorValue>#FFFFFF</ColorValue></ColorCard>
-        </Grid>
-
-        <Label>Azul — cor primária da marca</Label>
-        <Grid $cols={3}>
-          <ColorCard $bg="#0A1120" $dark><Label style={{ color: "#fff" }}>blue.dark</Label><ColorValue>#0A1120</ColorValue></ColorCard>
-          <ColorCard $bg="#14213D" $dark><Label style={{ color: "#fff" }}>blue.base</Label><ColorValue>#14213D</ColorValue></ColorCard>
-          <ColorCard $bg="#2B3A5A" $dark><Label style={{ color: "#fff" }}>blue.light</Label><ColorValue>#2B3A5A</ColorValue></ColorCard>
-          <ColorCard $bg="#EAF0F9"><Label>blueLight (tint)</Label><ColorValue>#EAF0F9</ColorValue></ColorCard>
-        </Grid>
-
-        <Label>Amarelo — cor de destaque</Label>
-        <Grid $cols={3}>
-          <ColorCard $bg="#D68A0E"><Label>yellow.dark</Label><ColorValue>#D68A0E</ColorValue></ColorCard>
-          <ColorCard $bg="#FCA311"><Label>yellow.base</Label><ColorValue>#FCA311</ColorValue></ColorCard>
-          <ColorCard $bg="#FFB742"><Label>yellow.light</Label><ColorValue>#FFB742</ColorValue></ColorCard>
-          <ColorCard $bg="#FFF8E6"><Label>yellowLight (tint)</Label><ColorValue>#FFF8E6</ColorValue></ColorCard>
-        </Grid>
-
-        <Label>Status / Suporte</Label>
-        <Grid $cols={3}>
-          <ColorCard $bg="#009E80" $dark><Label style={{ color: "#fff" }}>green.base</Label><ColorValue>#009E80</ColorValue></ColorCard>
-          <ColorCard $bg="#DFF5F0"><Label>green.light</Label><ColorValue>#DFF5F0</ColorValue></ColorCard>
-          <ColorCard $bg="#D83559" $dark><Label style={{ color: "#fff" }}>red.base</Label><ColorValue>#D83559</ColorValue></ColorCard>
-          <ColorCard $bg="#FCEAED"><Label>red.light</Label><ColorValue>#FCEAED</ColorValue></ColorCard>
-        </Grid>
-
-        <CodeBlock>{`// Exemplos de uso
-color:      \${({ theme }) => theme.colors.blue.base};
-background: \${({ theme }) => theme.colors.yellow.base};
-border:     1px solid \${({ theme }) => theme.colors.gray.base};
-color:      \${({ theme }) => theme.colors.green.base}; // sucesso
-color:      \${({ theme }) => theme.colors.red.base};   // erro`}</CodeBlock>
-      </Section>
-
-      {/* Tipografia */}
-      <Section>
-        <SectionTitle>Tipografia — <TokenName>theme.typography</TokenName></SectionTitle>
-
-        <Label>Tamanhos de fonte — fontSizes</Label>
+        <Label>Comparação — antes e depois</Label>
         <div>
           {([
-            ["sm",  "0.875rem", 400, "Textos auxiliares, labels, captions"],
-            ["md",  "1rem",     400, "Texto corrido, parágrafos"],
-            ["lg",  "1.25rem",  500, "Subtítulos, destaques"],
-            ["xl",  "1.5rem",   700, "Títulos de seção, headings"],
-          ] as const).map(([token, size, weight, desc]) => (
-            <TypographyRow key={token}>
-              <TokenName style={{ minWidth: 90 }}>fontSizes.{token}</TokenName>
-              <TypographySample $size={size} $weight={weight}>{desc}</TypographySample>
-              <Label>{size}</Label>
-            </TypographyRow>
+            ["spacing.xs",   "4px",      fluid(2,  4)],
+            ["spacing.sm",   "8px",      fluid(4,  8)],
+            ["spacing.md",   "16px",     fluid(8,  16)],
+            ["spacing.lg",   "24px",     fluid(16, 24)],
+            ["spacing.xl",   "32px",     fluid(20, 32)],
+            ["fontSizes.sm", "0.875rem", fluid(14, 16)],
+            ["fontSizes.md", "1rem",     fluid(16, 18)],
+            ["fontSizes.lg", "1.25rem",  fluid(20, 24)],
+            ["fontSizes.xl", "1.5rem",   fluid(24, 32)],
+          ] as const).map(([token, before, after]) => (
+            <CompareRow key={token}>
+              <TokenName>{token}</TokenName>
+              <Before>{before}</Before>
+              <After>{after}</After>
+            </CompareRow>
           ))}
         </div>
-
-        <Label>Pesos de fonte — fontWeights</Label>
-        <div>
-          {([
-            ["regular", 400, "Texto comum"],
-            ["medium",  500, "Texto com ênfase leve"],
-            ["bold",    700, "Títulos e destaques"],
-          ] as const).map(([token, weight, desc]) => (
-            <TypographyRow key={token}>
-              <TokenName style={{ minWidth: 120 }}>fontWeights.{token}</TokenName>
-              <TypographySample $size="1rem" $weight={weight}>{desc} — weight {weight}</TypographySample>
-            </TypographyRow>
-          ))}
-        </div>
-
-        <CodeBlock>{`font-size:   \${({ theme }) => theme.typography.fontSizes.lg};
-font-weight: \${({ theme }) => theme.typography.fontWeights.bold};
-line-height: \${({ theme }) => theme.typography.lineHeights.relaxed};
-font-family: \${({ theme }) => theme.typography.fontFamily};`}</CodeBlock>
       </Section>
 
-      {/* Espaçamentos */}
+      {/* Como funciona o fluid() */}
       <Section>
-        <SectionTitle>Espaçamentos — <TokenName>theme.spacing</TokenName></SectionTitle>
+        <SectionTitle>
+          A função <TokenName>fluid()</TokenName>
+        </SectionTitle>
         <Description>
-          Use para <TokenName>padding</TokenName>, <TokenName>margin</TokenName> e <TokenName>gap</TokenName>.
-          Mantém consistência visual em todo o projeto.
+          Recebe o valor mínimo e máximo em <TokenName>px</TokenName> e retorna uma string{" "}
+          <TokenName>clamp()</TokenName> calculada com base nos breakpoints{" "}
+          <TokenName>mobile (320px)</TokenName> e <TokenName>desktop (1440px)</TokenName>.
+          O browser interpreta essa string nativamente — sem JavaScript rodando no cliente.
         </Description>
 
-        {([
-          ["xs", "4px"],
-          ["sm", "8px"],
-          ["md", "16px"],
-          ["lg", "24px"],
-          ["xl", "32px"],
-        ] as const).map(([token, value]) => (
-          <SpacingRow key={token}>
-            <TokenName style={{ minWidth: 100 }}>spacing.{token}</TokenName>
-            <SpacingBar $size={value} />
-            <Label>{value}</Label>
-          </SpacingRow>
-        ))}
+        <CodeBlock>{`// src/theme/utils/fluid.ts
+import { breakpoints } from '../tokens/breakpoints'
 
-        <CodeBlock>{`padding: \${({ theme }) => theme.spacing.md};
-gap:     \${({ theme }) => theme.spacing.sm};
-margin:  \${({ theme }) => theme.spacing.lg} 0;`}</CodeBlock>
-      </Section>
+export function fluid(minPx: number, maxPx: number): string {
+  const minBp = breakpoints.mobile   // 320
+  const maxBp = breakpoints.desktop  // 1440
 
-      {/* Radius */}
-      <Section>
-        <SectionTitle>Border Radius — <TokenName>theme.radius</TokenName></SectionTitle>
-        <Grid $cols={4}>
-          {([
-            ["sm",    "6px",     "Inputs, tags"],
-            ["md",    "10px",    "Cards, modais"],
-            ["lg",    "16px",    "Containers grandes"],
-            ["round", "9999px",  "Badges, avatares"],
-          ] as const).map(([token, value, desc]) => (
-            <RadiusBox key={token} $radius={value}>
-              <TokenName style={{ color: "#fff", background: "rgba(255,255,255,0.15)" }}>
-                radius.{token}
-              </TokenName>
-              <Label style={{ color: "#fff" }}>{value}</Label>
-              <Label style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.75rem" }}>{desc}</Label>
-            </RadiusBox>
-          ))}
-        </Grid>
+  const slope        = (maxPx - minPx) / (maxBp - minBp)
+  const intercept    = minPx - slope * minBp
 
-        <CodeBlock>{`border-radius: \${({ theme }) => theme.radius.sm};   // inputs
-border-radius: \${({ theme }) => theme.radius.md};   // cards
-border-radius: \${({ theme }) => theme.radius.round}; // badges`}</CodeBlock>
-      </Section>
+  const minRem       = (minPx / 16).toFixed(4)
+  const maxRem       = (maxPx / 16).toFixed(4)
+  const interceptRem = (intercept / 16).toFixed(4)
+  const slopeVw      = (slope * 100).toFixed(4)
 
-      {/* Sombras */}
-      <Section>
-        <SectionTitle>Sombras — <TokenName>theme.shadows</TokenName></SectionTitle>
-        <Grid $cols={3}>
-          {([
-            ["sm", "0 2px 6px rgba(0,0,0,0.06)",              "Hover sutil, cards planos"],
-            ["md", "0 12px 24px rgba(0,0,0,0.08)",            "Cards elevados, dropdowns"],
-            ["lg", "0 24px 45px rgba(27,67,121,0.12)",        "Modais, painéis flutuantes"],
-          ] as const).map(([token, value, desc]) => (
-            <ShadowBox key={token} $shadow={value}>
-              <TokenName>shadows.{token}</TokenName>
-              <Label style={{ textAlign: "center" }}>{desc}</Label>
-            </ShadowBox>
-          ))}
-        </Grid>
+  return \`clamp(\${minRem}rem, \${interceptRem}rem + \${slopeVw}vw, \${maxRem}rem)\`
+}`}</CodeBlock>
 
-        <CodeBlock>{`box-shadow: \${({ theme }) => theme.shadows.sm}; // hover sutil
-box-shadow: \${({ theme }) => theme.shadows.md}; // card elevado
-box-shadow: \${({ theme }) => theme.shadows.lg}; // modal`}</CodeBlock>
-      </Section>
-
-      {/* Breakpoints */}
-      <Section>
-        <SectionTitle>Breakpoints — <TokenName>theme.breakpoints</TokenName></SectionTitle>
-        <Description>
-          Usados para criar media queries responsivas. No módulo 03 estes valores serão
-          integrados ao sistema de tipografia e espaçamento fluido com <TokenName>clamp()</TokenName>.
-        </Description>
-
+        <Label>Valores gerados por token</Label>
         <Grid $cols={2}>
           {([
-            ["tablet",  "768px",  "Tablets e telas médias"],
-            ["desktop", "1440px", "Desktops e telas largas"],
-          ] as const).map(([token, value, desc]) => (
-            <ColorCard key={token} $bg="#EAF0F9">
-              <TokenName>breakpoints.{token}</TokenName>
-              <TypographySample $size="1.5rem" $weight={700}>{value}</TypographySample>
-              <Label>{desc}</Label>
-            </ColorCard>
+            ["fluid(14, 16)",  fluid(14, 16)],
+            ["fluid(16, 18)",  fluid(16, 18)],
+            ["fluid(20, 24)",  fluid(20, 24)],
+            ["fluid(24, 32)",  fluid(24, 32)],
+            ["fluid(2, 4)",    fluid(2,  4)],
+            ["fluid(4, 8)",    fluid(4,  8)],
+            ["fluid(8, 16)",   fluid(8,  16)],
+            ["fluid(16, 24)",  fluid(16, 24)],
+          ] as const).map(([call, result]) => (
+            <FluidCard key={call}>
+              <FluidToken>{call}</FluidToken>
+              <FluidValue>{result}</FluidValue>
+            </FluidCard>
           ))}
         </Grid>
 
-        <CodeBlock>{`// Uso com styled-components
-const Card = styled.div\`
-  padding: \${({ theme }) => theme.spacing.md};
+        <CodeBlock>{`// Como usar nos tokens
+import { fluid } from "../utils/fluid"
 
-  @media (min-width: \${({ theme }) => theme.breakpoints.tablet}px) {
-    padding: \${({ theme }) => theme.spacing.lg};
-  }
+// typography.ts
+fontSizes: {
+  sm: fluid(14, 16),
+  md: fluid(16, 18),
+  lg: fluid(20, 24),
+  xl: fluid(24, 32),
+}
 
-  @media (min-width: \${({ theme }) => theme.breakpoints.desktop}px) {
-    padding: \${({ theme }) => theme.spacing.xl};
-  }
+// spacing.ts
+export const spacing = {
+  xs: fluid(2,  4),
+  sm: fluid(4,  8),
+  md: fluid(8,  16),
+  lg: fluid(16, 24),
+  xl: fluid(20, 32),
+}`}</CodeBlock>
+      </Section>
+
+      {/* Container */}
+      <Section>
+        <SectionTitle>
+          O componente <TokenName>Container</TokenName>
+        </SectionTitle>
+        <Description>
+          Centraliza o conteúdo horizontalmente, limita a largura máxima ao breakpoint{" "}
+          <TokenName>desktop (1440px)</TokenName> e garante padding lateral em telas menores
+          para que o conteúdo nunca encoste nas bordas.
+        </Description>
+
+        <ContainerDemo>
+          <ContainerMeta>
+            <Label>← padding</Label>
+            <TokenName>max-width: 1440px · margin: 0 auto</TokenName>
+            <Label>padding →</Label>
+          </ContainerMeta>
+          <ContainerDemoInner>
+            Todo o conteúdo do site vive aqui dentro
+          </ContainerDemoInner>
+        </ContainerDemo>
+
+        <CodeBlock>{`// src/layout/Container.ts
+import styled from "styled-components"
+
+export const Container = styled.div\`
+  width: 100%;
+  max-width: \${({ theme }) => theme.breakpoints.desktop}px;
+  margin: 0 auto;
+  padding: 0 \${({ theme }) => theme.spacing.xl};
+  display: flex;
+  flex-direction: column;
+  gap: \${({ theme }) => theme.spacing.xl};
 \``}</CodeBlock>
+
+        <CodeBlock>{`// Uso em qualquer página
+import { Container } from "../layout/Container"
+
+export default function Home() {
+  return (
+    <Container>
+      <Header>...</Header>
+      <Section>...</Section>
+    </Container>
+  )
+}`}</CodeBlock>
+      </Section>
+
+      {/* Por que não media queries para cada propriedade */}
+      <Section>
+        <SectionTitle>Por que não usar media queries para cada propriedade?</SectionTitle>
+        <Description>
+          A abordagem tradicional exigiria uma media query por token em cada breakpoint.
+          Com <TokenName>fluid()</TokenName> isso se resolve em uma linha — e a transição
+          é <strong>contínua</strong>, não um salto abrupto entre breakpoints.
+        </Description>
+
+        <CodeBlock>{`// ❌ Abordagem tradicional — verboso e com saltos abruptos
+const Title = styled.h1\`
+  font-size: 1.5rem;
+
+  @media (min-width: 768px) {
+    font-size: 1.75rem;
+  }
+  @media (min-width: 1440px) {
+    font-size: 2rem;
+  }
+\`
+
+// ✅ Com fluid() — uma linha, transição suave e contínua
+const Title = styled.h1\`
+  font-size: \${({ theme }) => theme.typography.fontSizes.xl};
+\``}</CodeBlock>
+
+        <Description>
+          Media queries ainda serão usadas no próximo módulo — mas apenas para mudanças
+          estruturais de layout, como número de colunas ou visibilidade do menu mobile.
+          Nunca mais para escalar fontes ou espaçamentos.
+        </Description>
       </Section>
 
       {/* Próximo módulo */}
       <Section>
         <SectionTitle>Próximo módulo</SectionTitle>
         <Description>
-          No módulo <strong>03-responsive-layout</strong> os tokens de tipografia e
-          espaçamento serão convertidos para valores fluidos com <TokenName>clamp()</TokenName>,
-          tornando o layout automaticamente responsivo entre os breakpoints definidos acima —
-          sem necessidade de media queries para cada propriedade.
+          No módulo <strong>04-layout-components</strong> será criado o sistema de
+          roteamento com <TokenName>react-router-dom</TokenName> e os componentes de
+          layout globais — <TokenName>Navbar</TokenName> e <TokenName>Footer</TokenName> —
+          que se aplicam automaticamente a todas as páginas.
         </Description>
       </Section>
 
-    </Page>
+    </Container>
   )
 }

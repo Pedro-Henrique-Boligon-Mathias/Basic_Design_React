@@ -1,12 +1,14 @@
+import { fluid } from "../utils/fluid"
+
 export const typography = {
 
   fontFamily: "system-ui, sans-serif",
   
   fontSizes: {
-    sm: "0.875rem",
-    md: "1rem",
-    lg: "1.25rem",
-    xl: "1.5rem",
+    sm: fluid(14, 16),
+    md: fluid(16, 18),
+    lg: fluid(20, 24),
+    xl: fluid(24, 32),
   },
 
   fontWeights: {
